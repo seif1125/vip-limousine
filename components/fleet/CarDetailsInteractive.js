@@ -105,7 +105,7 @@ const BookingForm = React.memo(({
             {acceptedTerms && <CheckCircle2 size={10} className="text-[#0F172A]" />}
           </div>
           <span className="text-[8px] text-slate-400 font-bold uppercase group-hover:text-white">
-            Accept <Link href="/terms" className="text-[#C5A25D] underline">Terms</Link> and <Link href="/privacy" className="text-[#C5A25D] underline">Privacy Policy</Link>
+            Accept  <Link href="/terms" className="text-[#C5A25D] underline">Terms</Link> and <Link href="/privacy" className="text-[#C5A25D] underline">Privacy Policy</Link>
           </span>
         </label>
         
