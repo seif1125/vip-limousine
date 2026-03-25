@@ -1,5 +1,6 @@
 import FleetClient from '../../components/fleet/FleetClient';
 import MOCK_DATA from '@/lib/mockData';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Luxury Fleet Selection | VIP Limousine Egypt',
@@ -24,7 +25,9 @@ export default function FleetPage() {
           })
         }}
       />
-      <FleetClient fleet={MOCK_DATA.fleet} />
+     <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center">Loading Fleet...</div>}>
+        <FleetClient fleet={MOCK_DATA.fleet} />
+      </Suspense>
     </>
   );
 }
