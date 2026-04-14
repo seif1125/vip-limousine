@@ -1,8 +1,7 @@
 import { Star, Quote, BriefcaseBusiness } from 'lucide-react';
-import MOCK_DATA  from '@/lib/mockData';
 import Image from 'next/image';
 
-export default function Testimonials() {
+export default function Testimonials(testimonials) {
   return (
     <section className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6">
@@ -16,9 +15,9 @@ export default function Testimonials() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {MOCK_DATA.testimonials.map((t) => (
+          {testimonials.testimonials.map((t) => (
             <div 
-              key={t.id} 
+              key={t._id} 
               className="bg-white p-10 rounded-[40px] shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 group flex flex-col justify-between"
             >
               <div>

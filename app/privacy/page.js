@@ -1,9 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Lock, EyeOff, Smartphone, Database, ChevronLeft, ShieldCheck } from 'lucide-react';
-// import MOCK_DATA from '@/lib/mockData'; // Not needed unless you restore the contact block
 
-// 1. Dynamic SEO Metadata (Zero JS overhead)
 export const metadata = {
   title: 'Privacy Policy | VIP Limousine Egypt',
   description: 'Our commitment to VIP discretion, data protection, and secure booking protocols for luxury travel in Egypt.',

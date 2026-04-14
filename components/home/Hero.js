@@ -20,10 +20,15 @@ export default function Hero({ banners }) {
               {/* Image with Navy Overlay */}
               <div className="absolute inset-0 z-0">
                 <Image
-                fill
-                src={slide.imageUrl} 
-                alt={slide.title.en} 
-                className="w-full h-full object-cover" 
+               fill
+               src={slide.imageUrl} 
+               alt={slide.title} 
+               priority={slide.id === banners[0].id} // Only prioritize the FIRST slide
+               placeholder="blur"
+               blurDataURL="data:image/png;base64,..." // Add a tiny base64 placeholder
+               className="object-cover" 
+               quality={85}
+              
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/60 to-transparent" />
               </div>
@@ -35,14 +40,14 @@ export default function Hero({ banners }) {
                     International Executive Travel
                   </p>
                   <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter leading-none">
-                    {slide.title.en}
+                    {slide.title}
                   </h1>
                   <p className="text-slate-300 text-lg md:text-xl font-medium leading-relaxed">
-                    {slide.subtitle.en}
+                    {slide.subtitle}
                   </p>
                   <div className="pt-4">
                     <Link href={slide.buttonUrl} className="inline-flex items-center gap-3 bg-[#C5A25D] text-white px-8 py-4 rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-white hover:text-[#0F172A] transition-all shadow-xl">
-                      {slide.buttonText.en} <ArrowRight size={16} />
+                      {slide.buttonText} <ArrowRight size={16} />
                     </Link>
                   </div>
                 </div>

@@ -1,13 +1,13 @@
-import MOCK_DATA from '@/lib/mockData';
+
 import CarDetailInteractive from '../../../components/fleet/CarDetailsInteractive';
+import { getAllFleet } from '@/lib/api';
 
 // 1. Dynamic Metadata Generation for Search Engines
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const car = MOCK_DATA.fleet.find((c) => c.id === id);
-
+  const allCars = await getAllFleet();
+  const car = allCars.find((c) => c._id === id); 
   if (!car) return { title: "Vehicle Not Found" };
-
   return {
     title: `Rent ${car.name} | Egypt's NO:1 Limousine service`,
     description: `Book a limousine ${car.name}. ${car.specs.passengers} passengers, ${car.specs.luggage} luggage capacity. Elite travel in Cairo & New Capital.`,
@@ -19,7 +19,11 @@ export async function generateMetadata({ params }) {
 
 export default async function CarDetailPage({ params }) {
   const { id } = await params; 
-  const car = MOCK_DATA.fleet.find((c) => c.id === id);
+  console.log('Fetching details for car ID:', id);
+  const cars =await getAllFleet();
+  console.log('All cars fetched:', cars);
+  console.log(cars, 'Featured cars from API');
+  const car= cars.find((c) => c._id === id); 
 
   if (!car) {
     return (
@@ -63,8 +67,7 @@ export default async function CarDetailPage({ params }) {
 
       <CarDetailInteractive 
         car={car} 
-        socials={MOCK_DATA.socials} 
-        reservations={MOCK_DATA.reservations} 
+   
       />
     </>
   );

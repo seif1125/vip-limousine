@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Scale, Clock, Ban, CreditCard, ChevronLeft } from 'lucide-react';
-import MOCK_DATA from '@/lib/mockData';
+
 
 // 1. Dynamic SEO Metadata (Only works on Server Components)
 export const metadata = {
@@ -13,9 +13,11 @@ export const metadata = {
   }
 };
 
-export default function TermsPage() {
-  const { socials } = MOCK_DATA;
+export default async function TermsPage() {
+  const  socials  = await fetch(process.env.NEXT_PUBLIC_API_URL + '/app-settings').then(res => res.json()).then(data => data.data.contactSettings); 
+const { emails, phones } = socials; // Destructure for easier access
 
+// Assuming the first item contains the relevant contact info
   // 2. Structured Data for better Google indexing
   const jsonLd = {
     "@context": "https://schema.org",
@@ -120,18 +122,18 @@ export default function TermsPage() {
               </p>
               <div className="flex flex-wrap gap-6">
                 <Link 
-                  href={`mailto:${socials.email}`} 
-                  aria-label={`Email us at ${socials.email}`}
+                  href={`mailto:${emails.supportMail}`} 
+                  aria-label={`Email us at ${emails.supportMail}`}
                   className="text-[10px] font-black uppercase tracking-widest text-[#C5A25D] hover:text-slate-900 transition-colors"
                 >
-                  {socials.email}
+                  {emails.supportMail}
                 </Link>
                 <Link 
-                  href={`tel:${socials.tel}`} 
-                  aria-label={`Call us at ${socials.tel}`}
+                  href={`tel:${phones.hotline}`} 
+                  aria-label={`Call us at ${phones.hotline}`}
                   className="text-[10px] font-black uppercase tracking-widest text-[#C5A25D] hover:text-slate-900 transition-colors"
                 >
-                  {socials.tel}
+                  {phones.hotline}
                 </Link>
               </div>
             </div>

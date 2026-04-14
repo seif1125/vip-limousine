@@ -1,14 +1,14 @@
 "use client";
 import React from 'react';
-import Image from 'next/image';
+
 import Link from 'next/link';
-import { Wifi, Map, Gauge, Users, Briefcase, ChevronRight, Camera } from 'lucide-react';
+import {  ChevronRight} from 'lucide-react';
 import FleetCarCard from './FleetCarCard';
-import MOCK_DATA from '@/lib/mockData';
 
-export default function FeaturedFleet() {
-  const featuredCars = MOCK_DATA.fleet.filter(car => car.featured);
 
+export default function FeaturedFleet(featuredCars) {
+ 
+console.log(featuredCars.featuredCars,"featuredCars from props");
   return (
     <section className="py-20 bg-transparent"> {/* Background removed */}
       <div className="max-w-7xl mx-auto px-6">
@@ -33,8 +33,8 @@ export default function FeaturedFleet() {
 
         {/* Fleet Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {featuredCars.map((car) => (
-            <FleetCarCard key={car.id} car={car} />
+          {featuredCars.featuredCars.map((car) => (
+            <FleetCarCard key={car._id} car={car} />
           ))}
         </div>
       </div>

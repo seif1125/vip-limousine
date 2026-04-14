@@ -1,15 +1,14 @@
 "use client";
-import React, { useState } from 'react'; // Added useState
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
-  Mail, Menu, X // Added Menu and X icons
-} from 'lucide-react';
+import { Mail, Menu, X } from 'lucide-react';
 import { Facebook, Instagram, TikTok, Youtube } from '@/constants';
 
-export default function Header() {
+export default function Header({ settings }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Static internal navigation
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Fleet", href: "/fleet" },
@@ -17,12 +16,13 @@ export default function Header() {
     { name: "Privacy", href: "/privacy" },
   ];
 
+  // Dynamic social links mapping API data to constant icons
   const socialLinks = [
-    { icon: <Facebook />, href: "https://facebook.com/viplimo", label: "Facebook" },
-    { icon: <Instagram />, href: "https://instagram.com/viplimo", label: "Instagram" },
-    { icon: <Youtube />, href: "https://youtube.com/@viplimo", label: "Youtube" },
-    { icon: <TikTok size={20} />, href: "https://tiktok.com/@viplimo", label: "TikTok" },
-    { icon: <Mail size={20} />, href: "mailto:Mohgamal.t@gmail.com", label: "Mail" },
+    { icon: <Facebook />, href: settings?.socials?.facebook, label: "Facebook" },
+    { icon: <Instagram />, href: settings?.socials?.instagram, label: "Instagram" },
+    { icon: <Youtube />, href: settings?.socials?.youtube, label: "Youtube" },
+    { icon: <TikTok size={20} />, href: settings?.socials?.tiktok, label: "TikTok" },
+    { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}`, label: "Mail" },
   ];
 
   return (
@@ -44,7 +44,7 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* DESKTOP NAVIGATION */}
+          {/* DESKTOP NAVIGATION (Static) */}
           <nav className="hidden lg:flex gap-10 text-[11px] font-black uppercase tracking-widest text-[#0F172A]">
             {navLinks.map((link) => (
               <Link key={link.name} href={link.href} className="hover:text-[#C5A25D] transition-colors">
@@ -53,17 +53,19 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* DESKTOP SOCIALS */}
+          {/* DESKTOP SOCIALS (Dynamic) */}
           <div className="hidden lg:flex text-[#0F172A] items-center gap-5">
             {socialLinks.map((social, idx) => (
-              <Link 
-                key={idx} 
-                href={social.href} 
-                target="_blank" 
-                className="hover:text-[#C5A25D] transition-colors"
-              >
-                {social.icon}
-              </Link>
+              social.href && (
+                <Link 
+                  key={idx} 
+                  href={social.href} 
+                  target="_blank" 
+                  className="hover:text-[#C5A25D] transition-colors"
+                >
+                  {social.icon}
+                </Link>
+              )
             ))}
           </div>
 
@@ -81,7 +83,6 @@ export default function Header() {
       <div className={`fixed inset-0 top-20 bg-white z-50 lg:hidden transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex flex-col h-full p-8 space-y-8">
           
-          {/* MOBILE LINKS */}
           <nav className="flex flex-col space-y-6">
             {navLinks.map((link) => (
               <Link 
@@ -97,27 +98,28 @@ export default function Header() {
 
           <div className="h-px bg-slate-100 w-full" />
 
-          {/* MOBILE SOCIALS */}
+          {/* MOBILE SOCIALS (Dynamic) */}
           <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Connect with us</p>
             <div className="flex flex-wrap gap-6 text-[#0F172A]">
                 {socialLinks.map((social, idx) => (
-                  <Link 
-                    key={idx} 
-                    href={social.href} 
-                    target="_blank" 
-                    className="p-3 bg-slate-50 rounded-xl hover:text-[#C5A25D] hover:bg-slate-100 transition-all"
-                  >
-                    {social.icon}
-                  </Link>
+                  social.href && (
+                    <Link 
+                      key={idx} 
+                      href={social.href} 
+                      target="_blank" 
+                      className="p-3 bg-slate-50 rounded-xl hover:text-[#C5A25D] hover:bg-slate-100 transition-all"
+                    >
+                      {social.icon}
+                    </Link>
+                  )
                 ))}
             </div>
           </div>
 
-          {/* FOOTER OF MENU */}
           <div className="mt-auto pb-10">
              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                © 2026 VIP Limousine Egypt.
+                © {new Date().getFullYear()} VIP Limousine Egypt.
              </p>
           </div>
         </div>

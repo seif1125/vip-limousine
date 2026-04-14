@@ -1,45 +1,54 @@
 "use client";
-import React, { useMemo } from 'react';
+import React, { useMemo ,useState,useEffect} from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Search, Star, ChevronLeft, ChevronRight, Car } from 'lucide-react';
 import FleetCarCard from '../home/FleetCarCard';
 
-export default function FleetClient({ fleet }) {
+export default function FleetClient({ allCars }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Get values from URL or defaults
-  const currentCategory = searchParams.get('type') || 'All';
-  const searchQuery = searchParams.get('q') || '';
+  // 1. LOCAL SEARCH STATE
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
+
+  const currentCategory = searchParams.get('category') || 'All';
   const isFeatured = searchParams.get('featured') === 'true';
   const currentPage = parseInt(searchParams.get('page')) || 1;
   const itemsPerPage = 12;
 
-  // Helper to update URL
+  // 2. DEBOUNCE EFFECT: Only update the URL 500ms after user stops typing
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      updateParams({ q: searchTerm });
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
   const updateParams = (newParams) => {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(newParams).forEach(([key, value]) => {
-      if (value === null || value === 'All' || value === false) {
+      if (value === null || value === 'All' || value === false || value === '') {
         params.delete(key);
       } else {
         params.set(key, value);
       }
     });
-    // Reset page on filter change
     if (!newParams.page) params.delete('page');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const filteredFleet = useMemo(() => {
-    return fleet.filter((car) => {
-      const matchesCategory = currentCategory === "All" || car.type === currentCategory;
-      const matchesSearch = car.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            car.type.toLowerCase().includes(searchQuery.toLowerCase());
+    // Note: We use the URL param here so the list updates when the debounce finishes
+    const activeSearch = searchParams.get('q') || ''; 
+    return allCars.filter((car) => {
+      const matchesCategory = currentCategory === "All" || car.category?.name === currentCategory;
+      const matchesSearch = car.name.toLowerCase().includes(activeSearch.toLowerCase());
       const matchesFeatured = isFeatured ? car.featured === true : true;
       return matchesCategory && matchesSearch && matchesFeatured;
     });
-  }, [currentCategory, searchQuery, isFeatured, fleet]);
+  }, [currentCategory, searchParams.get('q'), isFeatured, allCars]);
 
   const totalPages = Math.ceil(filteredFleet.length / itemsPerPage);
   const paginatedFleet = filteredFleet.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -59,8 +68,8 @@ export default function FleetClient({ fleet }) {
               type="text"
               placeholder="Search by car name or type..."
               className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 text-white focus:border-[#C5A25D] outline-none transition-all"
-              value={searchQuery}
-              onChange={(e) => updateParams({ q: e.target.value })}
+              value={searchTerm}
+              onChange={(e) => {setSearchTerm(e.target.value)}}
             />
           </form>
         </div>
@@ -69,11 +78,11 @@ export default function FleetClient({ fleet }) {
       <div className="max-w-7xl mx-auto px-6 -mt-8 relative z-20">
         <div className="bg-white rounded-2xl shadow-xl p-3 flex flex-wrap items-center gap-4 border border-slate-100">
           <div className="flex flex-wrap gap-2">
-            {["All", ...new Set(fleet.map(car => car.type))].map((cat) => (
+            {["All", ...new Set(allCars.map(car => car.category.name))].map((cat) => (
               <button
-                key={cat}
-                onClick={() => updateParams({ type: cat })}
-                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                key={Date.now() + cat} // Unique key for dynamic categories
+                onClick={() => updateParams({ category: cat })}
+                className={`cursor-pointer px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   currentCategory === cat ? "bg-[#C5A25D] text-white" : "text-slate-500 hover:bg-slate-50"
                 }`}
               >
@@ -84,11 +93,11 @@ export default function FleetClient({ fleet }) {
 
           <button 
             onClick={() => updateParams({ featured: !isFeatured })}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] cursor-pointer font-black uppercase tracking-widest border transition-all ${
               isFeatured ? "border-[#C5A25D] text-[#C5A25D] bg-[#C5A25D]/5" : "border-slate-100 text-slate-400"
             }`}
           >
-            <Star size={14} fill={isFeatured ? "#C5A25D" : "transparent"} /> Featured
+            <Star size={14} fill={isFeatured ? "#C5A25D" : "transparent"} /> Featured Only
           </button>
         </div>
       </div>
@@ -96,7 +105,7 @@ export default function FleetClient({ fleet }) {
       <section className="max-w-7xl mx-auto px-6 mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {paginatedFleet.map((car) => (
-            <FleetCarCard key={car.id} car={car} />
+            <FleetCarCard key={car._id} car={car} />
           ))}
         </div>
 

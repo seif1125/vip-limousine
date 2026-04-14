@@ -2,53 +2,65 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Montserrat } from 'next/font/google';
+import api from '@/lib/api';
 
 const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '700', '900'], display: 'swap' });
 
-  export const metadata = {
-    metadataBase: new URL('https://viplimoegypt.com'), // Replace with your domain
-    title: {
-      default: "VIP Limousine Egypt | Egypt's NO:1 Limousine service",
-      template: '%s | VIP Limousine Egypt'
-    },
-    description: 'Premium chauffeur services in Cairo, Alexandria, and the New Capital. Luxury fleet including Mercedes S-Class and Maybach for executives.',
-    keywords: ['Cairo Airport Transfer', 'Limousine Service Egypt', 'Chauffeur Cairo', 'Luxury Car Rental Egypt'],
-    openGraph: {
-      title: 'VIP Limousine Egypt',
-      description: "Egypt's NO:1 Limousine service",
-      url: 'https://viplimoegypt.com',
-      siteName: 'VIP Limousine',
-      images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
-      locale: 'en_US',
-      type: 'website',
-    },
-  };
+// DYNAMIC METADATA
+export async function generateMetadata() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app-settings`, { next: { revalidate: 3600 } });
+    const { data } = await res.json();
+    const meta = data.appSettings.metadata;
 
+    return {
+      metadataBase: new URL(meta.domainUrl),
+      title: {
+        default: meta.defaultTitle,
+        template: meta.titleTemplate
+      },
+      description: meta.description,
+      keywords: meta.keywords,
+      openGraph: {
+        title: meta.defaultTitle,
+        description: meta.description,
+        url: meta.domainUrl,
+        images: [{ url: meta.ogImage }],
+      },
+    };
+  } catch (error) {
+    return { title: "VIP Limousine Egypt" }; // Fallback
+  }
+}
 
-export default function RootLayout({ children }) {
-  const schema = {
+export default async function RootLayout({ children }) {
+  // Fetch settings once for the entire app
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app-settings`, { 
+    next: { revalidate: 3600 } // Cache for 1 hour
+  });
+  const { data } = await res.json();
+  
+  const { appSettings, contactSettings } = data;
+
+  const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "TravelAgency",
-    "name": "VIP Limousine Egypt",
-    "description": "Premium English-speaking chauffeur services for international guests in Egypt.",
-    "areaServed": ["Cairo", "Giza", "New Capital", "Alexandria"],
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Limousine Services",
-      "itemListElement": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Airport Meet & Greet" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Executive Business Travel" } }
-      ]
-    }
+    "@type": appSettings.schemaData.businessType,
+    "name": appSettings.schemaData.businessName,
+    "areaServed": appSettings.schemaData.areaServed,
+    "description": appSettings.metadata.description
   };
 
   return (
     <html lang="en">
       <body className={`${montserrat.className} bg-slate-50 text-[#0F172A] antialiased`}>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-        <Header />
+        <script 
+          type="application/ld+json" 
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
+        />
+        {/* Pass data to Client Components as props */}
+        <Header settings={contactSettings} />
         <main>{children}</main>
-        <Footer />
+        <Footer settings={contactSettings} />
       </body>
     </html>
   );

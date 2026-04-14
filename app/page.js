@@ -1,60 +1,79 @@
 import { Suspense } from 'react';
-import { getBanners, getFeaturedFleet } from '@/lib/api';
+import { getBanners, getFeaturedFleet, getTestimonials } from '@/lib/api';
 import Hero from '@/components/home/Hero';
 import About from '@/components/home/About';
 import FeaturedCars from '@/components/home/FeaturedCars';
 import Testimonials from '@/components/home/Testimonials';
 
-// Loading states for performance
-const Skeleton = ({ h }) => <div className={`${h} bg-slate-200 animate-pulse rounded-[32px]`} />;
+// SEO: Structured Data for Google
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CarRental",
+  "name": "VIP Limousine Egypt",
+  "description": "Premium chauffeur and car rental services in Egypt.",
+  "areaServed": "Egypt",
+  "priceRange": "$$"
+};
 
 export default async function HomePage() {
-  // Parallel Fetching
-  const bannerData = getBanners();
-  const fleetData = getFeaturedFleet();
+  // Parallel Fetching: Start all requests simultaneously
+  const bannerPromise = getBanners();
+  const fleetPromise = getFeaturedFleet();
+  const testimonialPromise = getTestimonials();
 
   return (
     <main>
-      {/* 1. HERO SLIDER */}
-      <Suspense fallback={<div className="h-[85vh] bg-navy-950 animate-pulse" />}>
-        <HeroPromise dataPromise={bannerData} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* 1. HERO: Critical for LCP */}
+      <Suspense fallback={<div className="h-[85vh] bg-[#0F172A] animate-pulse" />}>
+        <HeroPromise dataPromise={bannerPromise} />
       </Suspense>
 
-      {/* 2. ABOUT (Instant) */}
+      {/* 2. ABOUT: Static/Instant */}
       <About />
 
       {/* 3. FEATURED FLEET */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-24 bg-slate-50" aria-labelledby="fleet-heading">
         <div className="max-w-7xl mx-auto px-6">
-          <header className="mb-12 space-y-2">
- 
-          </header>
-          
-          <Suspense fallback={
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Skeleton h="h-96" /><Skeleton h="h-96" /><Skeleton h="h-96" />
-            </div>
-          }>
-            <FleetPromise dataPromise={fleetData} />
+          <Suspense fallback={<FleetSkeleton />}>
+            <FleetPromise dataPromise={fleetPromise} />
           </Suspense>
         </div>
       </section>
 
       {/* 4. TESTIMONIALS */}
-      <Suspense fallback={<Skeleton h="h-64 mx-6 mb-24" />}>
-        <Testimonials />
+      <Suspense fallback={<div className="h-64 bg-slate-100 animate-pulse m-6 rounded-3xl" />}>
+        <TestimonialsPromise dataPromise={testimonialPromise} />
       </Suspense>
     </main>
   );
 }
 
-// Wrapper components to handle the Promises
+// Sub-components for streaming
 async function HeroPromise({ dataPromise }) {
-  const banners = await dataPromise;
-  return <Hero banners={banners} />;
+  const data = await dataPromise;
+  return <Hero banners={data} />;
 }
 
 async function FleetPromise({ dataPromise }) {
-  const cars = await dataPromise;
-  return <FeaturedCars cars={cars} />;
+  const data = await dataPromise;
+  return <FeaturedCars featuredCars={data} />;
+}
+
+async function TestimonialsPromise({ dataPromise }) {
+  const data = await dataPromise;
+  return <Testimonials testimonials={data} />;
+}
+
+function FleetSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="h-[500px] bg-slate-200 animate-pulse rounded-[2.5rem]" />
+      <div className="h-[500px] bg-slate-200 animate-pulse rounded-[2.5rem]" />
+    </div>
+  );
 }
