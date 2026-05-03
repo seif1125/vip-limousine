@@ -28,83 +28,70 @@ export const Facebook = (props) => (
   );
 
     // Trust points from your original code
-  export  const trustPoints = [
-      { icon: <Globe size={20} />, title: "English Speaking", desc: "Fluent chauffeurs for clear communication." },
-      { icon: <ShieldCheck size={20} />, title: "Certified Safety", desc: "Vetted drivers and GPS-tracked luxury fleet." },
-      { icon: <Clock size={20} />, title: "24/7 Monitoring", desc: "We track your flight for perfect pickup timing." }
-    ];
-  
-   export const reasons = [
-      {
-        icon: <Headset size={28} strokeWidth={1.5} />,
-        title: "24/7 Support",
-        desc: "Our dedicated support team is always available to assist you, ensuring a smooth and worry-free rental experience from start to finish."
+    export const trustPoints = [
+      { 
+        icon: <Globe size={20} />, 
+        title_en: "English Speaking", title_ar: "متحدثون بالإنجليزية", 
+        desc_en: "Fluent chauffeurs for clear communication.", desc_ar: "سائقون بطلاقة لتواصل واضح." 
       },
-      {
-        icon: <Tag size={28} strokeWidth={1.5} />,
-        title: "Transparent Pricing",
-        desc: "Enjoy competitive and clear pricing with no hidden fees. We offer flexible daily, weekly, and monthly rates to fit your budget."
+      { 
+        icon: <ShieldCheck size={20} />, 
+        title_en: "Certified Safety", title_ar: "سلامة معتمدة", 
+        desc_en: "Vetted drivers and GPS-tracked luxury fleet.", desc_ar: "سائقون مفحوصون وأسطول مراقب بالـ GPS." 
       },
-      {
-        icon: <ShieldCheck size={28} strokeWidth={1.5} />,
-        title: "Safety & Security",
-        desc: "Your safety is our priority. Our entire fleet undergoes regular, rigorous maintenance and safety inspections for your peace of mind on the road."
-      },
-      {
-        icon: <CalendarCheck size={28} strokeWidth={1.5} />,
-        title: "Easy Booking",
-        desc: "Reserve your ideal car in just a few minutes with our simple, secure, and user-friendly online booking system."
+      { 
+        icon: <Clock size={20} />, 
+        title_en: "24/7 Monitoring", title_ar: "مراقبة على مدار الساعة", 
+        desc_en: "We track your flight for perfect pickup timing.", desc_ar: "نتابع رحلتك لضمان الاستلام في الوقت المحدد." 
       }
     ];
-    // Services from your Elementor reference
-   export const services = [
+    
+    export const services = [
       { 
         icon: <PlaneTakeoff size={28} strokeWidth={1.5} />, 
-        title: "Reliable Airport Transfers", 
-        desc: "Enjoy a stress-free start and end to your journey. We provide reliable transfers to and from any airport with flight tracking included." 
+        title_en: "Reliable Airport Transfers", title_ar: "انتقالات مطار موثوقة", 
+        desc_en: "Enjoy a stress-free start and end to your journey with flight tracking.", desc_ar: "استمتع ببداية ونهاية لرحلتك خالية من التوتر مع تتبع الرحلات." 
       },
       { 
         icon: <CarFront size={28} strokeWidth={1.5} />, 
-        title: "Modern Car Rentals", 
-        desc: "Choose from our diverse fleet of modern, well-maintained vehicles, perfect for business trips, family holidays, or exploring Egypt in comfort." 
+        title_en: "Modern Car Rentals", title_ar: "تأجير سيارات حديثة", 
+        desc_en: "Diverse fleet of modern vehicles for business or family trips.", desc_ar: "أسطول متنوع من المركبات الحديثة لرحلات العمل أو العائلة." 
       },
       { 
         icon: <MapIcon size={28} strokeWidth={1.5} />, 
-        title: "Customized Tour Trips", 
-        desc: "Beyond simple rentals, we can arrange day trips or longer excursions to the destinations of your dreams. Your itinerary, your schedule." 
+        title_en: "Customized Tour Trips", title_ar: "جولات سياحية مخصصة", 
+        desc_en: "We arrange day trips to the destinations of your dreams.", desc_ar: "نحن نرتب رحلات يومية إلى الوجهات التي تحلم بها." 
       }
     ];
-  
-    // Branches/Locations from your Elementor reference
+    
     export const branches = [
-      { name: "Cairo", image: "/cairo.jpg"},
-      { name: "Alexandria", image: "/alex.jpg"},
-      { name: "Hurghada", image: "/hurghada.jpg"},
+      { name_en: "Cairo", name_ar: "القاهرة", image: "/cairo.jpg" },
+      { name_en: "Alexandria", name_ar: "الإسكندرية", image: "/alex.jpg" },
+      { name_en: "Hurghada", name_ar: "الغردقة", image: "/hurghada.jpg" },
     ];
-  
+    
     export const whyChooseUs = [
       {
         icon: <Headset size={28} strokeWidth={1.5} />,
-        title: "24/7 Support",
-        desc: "Our dedicated support team is always available to assist you, ensuring a smooth and worry-free rental experience from start to finish."
+        title_en: "24/7 Support", title_ar: "دعم 24/7",
+        desc_en: "Our dedicated support team is always available to assist you.", desc_ar: "فريق الدعم المخصص لدينا متاح دائمًا لمساعدتك."
       },
       {
         icon: <Tag size={28} strokeWidth={1.5} />,
-        title: "Transparent Pricing",
-        desc: "Enjoy competitive and clear pricing with no hidden fees. We offer flexible daily, weekly, and monthly rates to fit your budget."
+        title_en: "Transparent Pricing", title_ar: "أسعار شفافة",
+        desc_en: "Enjoy competitive and clear pricing with no hidden fees.", desc_ar: "استمتع بأسعار تنافسية وواضحة بدون رسوم مخفية."
       },
       {
         icon: <ShieldCheck size={28} strokeWidth={1.5} />,
-        title: "Safety & Security",
-        desc: "Your safety is our priority. Our entire fleet undergoes regular, rigorous maintenance and safety inspections for your peace of mind."
+        title_en: "Safety & Security", title_ar: "الأمن والسلامة",
+        desc_en: "Our entire fleet undergoes regular safety inspections.", desc_ar: "يخضع أسطولنا بالكامل لفحوصات سلامة دورية."
       },
       {
         icon: <CalendarCheck size={28} strokeWidth={1.5} />,
-        title: "Easy Booking",
-        desc: "Reserve your ideal car in just a few minutes with our simple, secure, and user-friendly online booking system."
+        title_en: "Easy Booking", title_ar: "حجز سهل",
+        desc_en: "Reserve your ideal car in minutes with our simple system.", desc_ar: "احجز سيارتك المثالية في دقائق بنظامنا البسيط."
       }
     ];
-
     export const formatForInput = (date) => {
       const d = new Date(date);
       d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -118,3 +105,32 @@ export const Facebook = (props) => (
         <span className="text-[8px] font-bold uppercase tracking-tighter">{message}</span>
       </div>
     );
+
+
+    export const AIRPORTS = [
+      { id: 1, name_en: "Cairo International Airport (CAI)", name_ar: "مطار القاهرة الدولي", lat: 30.1219, lng: 31.4056 },
+      { id: 2, name_en: "Sphinx International Airport (SPX)", name_ar: "مطار سفنكس الدولي", lat: 30.1100, lng: 30.8958 },
+      { id: 3, name_en: "Borg El Arab Airport (HBE)", name_ar: "مطار برج العرب الدولي", lat: 30.9175, lng: 29.5628 },
+      { id: 4, name_en: "Hurghada International Airport (HRG)", name_ar: "مطار الغردقة الدولي", lat: 27.1861, lng: 33.7997 },
+      { id: 5, name_en: "Sharm El Sheikh International Airport (SSH)", name_ar: "مطار شرم الشيخ الدولي", lat: 27.9772, lng: 34.3947 },
+      { id: 6, name_en: "Luxor International Airport (LXR)", name_ar: "مطار الأقصر الدولي", lat: 25.6706, lng: 32.7064 },
+      { id: 7, name_en: "Aswan International Airport (ASW)", name_ar: "مطار أسوان الدولي", lat: 23.9644, lng: 32.8194 },
+      { id: 8, name_en: "Marsa Alam International Airport (RMF)", name_ar: "مطار مرسى علم الدولي", lat: 25.5564, lng: 34.5836 }
+    ];
+    export const CITIES = [
+      { id: 1, name_en: "Cairo", name_ar: "القاهرة", lat: 30.0444, lng: 31.2357 },
+      { id: 2, name_en: "Alexandria", name_ar: "الإسكندرية", lat: 31.2001, lng: 29.9187 },
+      { id: 3, name_en: "Hurghada", name_ar: "الغردقة", lat: 27.2579, lng: 33.8116 },
+      { id: 4, name_en: "Sharm El Sheikh", name_ar: "شرم الشيخ", lat: 27.9158, lng: 34.3299 },
+      { id: 5, name_en: "Luxor", name_ar: "الأقصر", lat: 25.6872, lng: 32.6396 },
+      { id: 6, name_en: "Aswan", name_ar: "أسوان", lat: 24.0889, lng: 32.8998 },
+      { id: 7, name_en: "Giza", name_ar: "الجيزة", lat: 30.0131, lng: 31.2089 },
+      { id: 8, name_en: "Marsa Alam", name_ar: "مرسى علم", lat: 25.0676, lng: 34.8790 },
+      { id: 9, name_en: "North Coast (Sahel)", name_ar: "الساحل الشمالي", lat: 30.9328, lng: 28.9519 },
+      { id: 10, name_en: "El Gouna", name_ar: "الجونة", lat: 27.3941, lng: 33.6784 },
+      { id: 11, name_en: "Soma Bay", name_ar: "سوما باي", lat: 26.8458, lng: 33.9904 },
+      { id: 12, name_en: "Port Said", name_ar: "بورسعيد", lat: 31.2653, lng: 32.3019 },
+      { id: 13, name_en: "Ismailia", name_ar: "الإسماعيلية", lat: 30.5965, lng: 32.2715 },
+      { id: 14, name_en: "Ain Sokhna", name_ar: "العين السخنة", lat: 29.6644, lng: 32.3275 },
+      { id: 15, name_en: "Dahab", name_ar: "دهب", lat: 28.5094, lng: 34.5134 }
+    ];

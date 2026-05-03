@@ -1,32 +1,44 @@
 "use client";
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Menu, X } from 'lucide-react';
+import { Mail, Menu, X, Globe } from 'lucide-react';
 import { Facebook, Instagram, TikTok, Youtube } from '@/constants';
+// Import from your i18n routing
+import { Link, usePathname, useRouter } from '@/i18n/routing'; 
+import { useLocale } from 'next-intl';
 
 export default function Header({ settings }) {
   const [isOpen, setIsOpen] = useState(false);
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  // Static internal navigation
+  const isAr = locale === 'ar';
+
+  // Navigation Links - Now localized via your JSON messages or simple logic
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Fleet", href: "/fleet" },
-    { name: "Terms", href: "/terms" },
-    { name: "Privacy", href: "/privacy" },
+    { name: isAr ? "الرئيسية" : "Home", href: "/" },
+    { name: isAr ? "الأسطول" : "Fleet", href: "/fleet" },
+    { name: isAr ? "الشروط" : "Terms", href: "/terms" },
+    { name: isAr ? "الخصوصية" : "Privacy", href: "/privacy" },
   ];
 
-  // Dynamic social links mapping API data to constant icons
   const socialLinks = [
-    { icon: <Facebook />, href: settings?.socials?.facebook, label: "Facebook" },
-    { icon: <Instagram />, href: settings?.socials?.instagram, label: "Instagram" },
-    { icon: <Youtube />, href: settings?.socials?.youtube, label: "Youtube" },
-    { icon: <TikTok size={20} />, href: settings?.socials?.tiktok, label: "TikTok" },
-    { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}`, label: "Mail" },
+    { icon: <Facebook />, href: settings?.socials?.facebook },
+    { icon: <Instagram />, href: settings?.socials?.instagram },
+    { icon: <Youtube />, href: settings?.socials?.youtube },
+    { icon: <TikTok size={20} />, href: settings?.socials?.tiktok },
+    { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}` },
   ];
+
+  // Helper to switch language
+  const toggleLanguage = () => {
+    const nextLocale = isAr ? 'en' : 'ar';
+    router.replace(pathname, { locale: nextLocale });
+  };
 
   return (
-    <header className="sticky top-0 z-[100] w-full">
+    <header className="sticky top-0 z-[100] w-full" dir={isAr ? 'rtl' : 'ltr'}>
       {/* MAIN NAV */}
       <div className="bg-white/95 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -39,12 +51,12 @@ export default function Header({ settings }) {
                 VIP LIMOUSINE
               </span>
               <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C5A25D] hidden sm:block">
-                Egypt's NO:1 Limousine service
+                {isAr ? "خدمة الليموزين رقم 1 في مصر" : "Egypt's NO:1 Limousine service"}
               </p>
             </div>
           </Link>
 
-          {/* DESKTOP NAVIGATION (Static) */}
+          {/* DESKTOP NAVIGATION */}
           <nav className="hidden lg:flex gap-10 text-[11px] font-black uppercase tracking-widest text-[#0F172A]">
             {navLinks.map((link) => (
               <Link key={link.name} href={link.href} className="hover:text-[#C5A25D] transition-colors">
@@ -53,29 +65,47 @@ export default function Header({ settings }) {
             ))}
           </nav>
 
-          {/* DESKTOP SOCIALS (Dynamic) */}
-          <div className="hidden lg:flex text-[#0F172A] items-center gap-5">
-            {socialLinks.map((social, idx) => (
-              social.href && (
-                <Link 
-                  key={idx} 
-                  href={social.href} 
-                  target="_blank" 
-                  className="hover:text-[#C5A25D] transition-colors"
-                >
-                  {social.icon}
-                </Link>
-              )
-            ))}
+          {/* ACTIONS (Language + Socials) */}
+          <div className="hidden lg:flex items-center gap-6">
+            {/* Language Switcher Button */}
+            <button 
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-[#C5A25D] transition-all duration-300"
+            >
+              <Globe size={14} />
+              {isAr ? "English" : "عربي"}
+            </button>
+
+            <div className="h-4 w-px bg-slate-200" />
+
+            <div className="flex items-center gap-4 text-[#0F172A]">
+              {socialLinks.map((social, idx) => (
+                social.href && (
+                  <Link key={idx} href={social.href} target="_blank" className="hover:text-[#C5A25D] transition-colors">
+                    {social.icon}
+                  </Link>
+                )
+              ))}
+            </div>
           </div>
 
           {/* MOBILE TOGGLE */}
-          <button 
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-[#0F172A] hover:text-[#C5A25D] transition-colors"
-          >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          <div className="flex items-center gap-4 lg:hidden">
+             {/* Mobile Language Switcher (Compact) */}
+             <button 
+              onClick={toggleLanguage}
+              className="text-[10px] font-black uppercase tracking-widest text-[#C5A25D] border-2 border-[#C5A25D] px-3 py-1 rounded-lg"
+            >
+              {isAr ? "EN" : "عربي"}
+            </button>
+
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-[#0F172A]"
+            >
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -98,9 +128,11 @@ export default function Header({ settings }) {
 
           <div className="h-px bg-slate-100 w-full" />
 
-          {/* MOBILE SOCIALS (Dynamic) */}
+          {/* MOBILE SOCIALS */}
           <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Connect with us</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                {isAr ? "تواصل معنا" : "Connect with us"}
+            </p>
             <div className="flex flex-wrap gap-6 text-[#0F172A]">
                 {socialLinks.map((social, idx) => (
                   social.href && (
@@ -108,7 +140,7 @@ export default function Header({ settings }) {
                       key={idx} 
                       href={social.href} 
                       target="_blank" 
-                      className="p-3 bg-slate-50 rounded-xl hover:text-[#C5A25D] hover:bg-slate-100 transition-all"
+                      className="p-3 bg-slate-50 rounded-xl hover:text-[#C5A25D]"
                     >
                       {social.icon}
                     </Link>
@@ -119,7 +151,7 @@ export default function Header({ settings }) {
 
           <div className="mt-auto pb-10">
              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                © {new Date().getFullYear()} VIP Limousine Egypt.
+                © {new Date().getFullYear()} {isAr ? "VIP ليموزين مصر" : "VIP Limousine Egypt"}.
              </p>
           </div>
         </div>

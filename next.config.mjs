@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin(
+  './i18n/request.ts' // Path to your request config
+);
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
@@ -14,9 +19,19 @@ const nextConfig = {
         hostname: 'example.com',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '**',
+      }
 
     ],
   },
 };
 
-export default nextConfig;
+
+
+/** @type {import('next').NextConfig} */
+
+export default withNextIntl(nextConfig);
+

@@ -61,6 +61,7 @@ async function HeroPromise({ dataPromise }) {
 
 async function FleetPromise({ dataPromise }) {
   const data = await dataPromise;
+  console.log(data, 'Featured cars from API');
   return <FeaturedCars featuredCars={data} />;
 }
 

@@ -1,15 +1,18 @@
 "use client";
-import React, { useMemo ,useState,useEffect} from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Search, Star, ChevronLeft, ChevronRight, Car } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Search, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import FleetCarCard from '../home/FleetCarCard';
 
 export default function FleetClient({ allCars }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-
-  // 1. LOCAL SEARCH STATE
+  const locale = useLocale();
+  const t = useTranslations('Fleet');
+  
+  const isAr = locale === 'ar';
   const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
 
   const currentCategory = searchParams.get('category') || 'All';
@@ -17,12 +20,10 @@ export default function FleetClient({ allCars }) {
   const currentPage = parseInt(searchParams.get('page')) || 1;
   const itemsPerPage = 12;
 
-  // 2. DEBOUNCE EFFECT: Only update the URL 500ms after user stops typing
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       updateParams({ q: searchTerm });
     }, 500);
-
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
@@ -40,36 +41,35 @@ export default function FleetClient({ allCars }) {
   };
 
   const filteredFleet = useMemo(() => {
-    // Note: We use the URL param here so the list updates when the debounce finishes
     const activeSearch = searchParams.get('q') || ''; 
     return allCars.filter((car) => {
-      const matchesCategory = currentCategory === "All" || car.category?.name === currentCategory;
-      const matchesSearch = car.name.toLowerCase().includes(activeSearch.toLowerCase());
+      const catName = isAr ? car.category?.name_ar : car.category?.name_en;
+      const matchesCategory = currentCategory === "All" || catName === currentCategory;
+      const matchesSearch = (isAr ? car.name_ar : car.name_en).toLowerCase().includes(activeSearch.toLowerCase());
       const matchesFeatured = isFeatured ? car.featured === true : true;
       return matchesCategory && matchesSearch && matchesFeatured;
     });
-  }, [currentCategory, searchParams.get('q'), isFeatured, allCars]);
+  }, [currentCategory, searchParams.get('q'), isFeatured, allCars, isAr]);
 
   const totalPages = Math.ceil(filteredFleet.length / itemsPerPage);
   const paginatedFleet = filteredFleet.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <main className="bg-[#F8FAFC] min-h-screen pb-32">
+    <main className="bg-[#F8FAFC] min-h-screen pb-32" dir={isAr ? 'rtl' : 'ltr'}>
       <section className="bg-[#0F172A] pt-32 pb-24 px-6 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white mb-6">
-            Elite <span className="text-[#C5A25D]">Fleet</span>
+            {isAr ? <>الأسطول <span className="text-[#C5A25D]">النخبة</span></> : <>Elite <span className="text-[#C5A25D]">Fleet</span></>}
           </h1>
           
-          {/* SEO Optimized Search Form */}
           <form onSubmit={(e) => e.preventDefault()} className="max-w-xl relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-[#C5A25D]" size={18} />
+            <Search className={`absolute ${isAr ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-500`} size={18} />
             <input 
               type="text"
-              placeholder="Search by car name or type..."
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 text-white focus:border-[#C5A25D] outline-none transition-all"
+              placeholder={t('searchPlaceholder')}
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-12 text-white focus:border-[#C5A25D] outline-none transition-all"
               value={searchTerm}
-              onChange={(e) => {setSearchTerm(e.target.value)}}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </form>
         </div>
@@ -78,15 +78,15 @@ export default function FleetClient({ allCars }) {
       <div className="max-w-7xl mx-auto px-6 -mt-8 relative z-20">
         <div className="bg-white rounded-2xl shadow-xl p-3 flex flex-wrap items-center gap-4 border border-slate-100">
           <div className="flex flex-wrap gap-2">
-            {["All", ...new Set(allCars.map(car => car.category.name))].map((cat) => (
+            {["All", ...new Set(allCars.map(car => isAr ? car.category?.name_ar : car.category?.name_en))].map((cat) => (
               <button
-                key={Date.now() + cat} // Unique key for dynamic categories
+                key={cat}
                 onClick={() => updateParams({ category: cat })}
                 className={`cursor-pointer px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   currentCategory === cat ? "bg-[#C5A25D] text-white" : "text-slate-500 hover:bg-slate-50"
                 }`}
               >
-                {cat}
+                {cat === "All" ? t('all') : cat}
               </button>
             ))}
           </div>
@@ -97,16 +97,15 @@ export default function FleetClient({ allCars }) {
               isFeatured ? "border-[#C5A25D] text-[#C5A25D] bg-[#C5A25D]/5" : "border-slate-100 text-slate-400"
             }`}
           >
-            <Star size={14} fill={isFeatured ? "#C5A25D" : "transparent"} /> Featured Only
+            <Star size={14} fill={isFeatured ? "#C5A25D" : "transparent"} /> {t('featuredOnly')}
           </button>
         </div>
       </div>
 
+      {/* Grid and Pagination remain similar, ensure FleetCarCard receives the localized car object */}
       <section className="max-w-7xl mx-auto px-6 mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {paginatedFleet.map((car) => (
-            <FleetCarCard key={car._id} car={car} />
-          ))}
+          {paginatedFleet.map((car) => <FleetCarCard key={car._id} car={car} />)}
         </div>
 
         {/* Pagination links are now "real" URLs */}

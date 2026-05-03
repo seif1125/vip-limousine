@@ -1,0 +1,87 @@
+{
+    "Hero": {
+      "title": "Premium Limousine Services",
+      "cta": "Book Now"
+    },
+    
+      "FleetPage": {
+        "meta": {
+          "title": "Luxury Fleet Selection | VIP Limousine Egypt",
+          "description": "Browse our elite fleet of chauffeur-driven Mercedes, BMW, and luxury SUVs in Cairo."
+        },
+        "breadcrumbs": {
+          "home": "Home",
+          "fleet": "Fleet"
+        }
+      },
+  "Fleet": {
+    "searchPlaceholder": "Search by car name or type...",
+    "all": "All",
+    "featuredOnly": "Featured Only"
+  },
+   "FleetClient": {
+  "form": {
+    "BookNow": "BOOK NOW",
+    "startingFrom": "Starting from",  
+    "name": "CUSTOMER NAME",
+    "required": "Required field",
+    "email": "EMAIL ADDRESS",
+    "phone1": "PHONE 1",
+    "phone2": "PHONE 2",
+    "standard": "STANDARD RENTAL",
+    "fullDay": "FULL DAY RENTAL",
+    "egyptian": "EGYPTIAN",
+    "nonEgyptian": "NON-EGYPTIAN",
+    "selectOnMap": "SELECT ON MAP...",
+    "pickupLocationLabel": "Pickup Details",
+    "dropoffLocationLabel": "Dropoff Details",
+    "locationHint": "Please select location on map",
+    "pickupDate": "Pickup Date/Time",
+    "dropoffDate": "Dropoff Date/Time",
+    "limit": "Limit: {hours}H / {km}KM",
+    "extraRates": "Extra: ${hrCost}/hr | ${kmCost}/km",
+    "extraHoursDisplay": "Extra Hours: {hours}",
+    "rateDisplay": "Rate: ${amount}",
+    "extraCostDisplay": "Extra Hours: ${amount}",
+    "total": "Total",
+    "cash": "Cash",
+    "visa": "Visa",
+    "transfer": "Transfer",
+    "confirm": "Confirm Reservation",
+    "processing": "Processing...",
+    "airportTransfer": "AIRPORT TRANSFER",
+    "cityToCity": "CITY TO CITY",
+  "selectAirport": "SELECT AIRPORT...",
+  "selectCity": "SELECT CITY...",
+  "toggleMode": "Switch between Airport and City",
+"description": "Please fill out the form below to submit your request. We will get back to you as soon as possible to confirm the details and arrange your booking."
+  },
+  "specs": {
+    "passengers": "Passengers",
+    "fourWheel": "4WD",
+    "transmission": "Transmission",
+    "capacity": "Capacity",
+    "luggage": "Luggage",
+    "wifiVal": "5G WiFi",
+    "wifiLabel": "Enabled",
+    "gpsVal": "GPS",
+    "gpsLabel": "Navigation",
+    "leatherSeats"  : "Leather Seats",
+    "AC": "A/C",
+    "available": "Available",
+    "notAvailable": "Not Available",
+    "seats": "Seats",
+    "bags": "Bags",
+    "automatic": "Automatic",
+    "manual": "Manual",
+    "wifi": "WiFi",
+    "gps": "GPS"
+  }
+},
+"NotFound": {
+  "notFound": "Page Not Found",
+  "title": "Lost in the City?",
+  "description": "The vehicle or page you're looking for has moved or doesn't exist.",
+  "goHome": "Back to Showroom"
+}
+  }
