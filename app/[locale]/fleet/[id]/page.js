@@ -12,7 +12,7 @@ export async function generateMetadata({ params }) {
   const name = locale === 'ar' ? car.name_ar : car.name_en;
   
   return {
-    title: `Rent ${name} | Egypt's NO:1 Limousine service`,
+    title: `Book limousine ${name} | Egypt's NO:1 Limousine service`,
     description: `Book a limousine ${name}. ${car.specs.passengers} passengers, ${car.specs.luggage} luggage capacity.`,
     alternates: { canonical: `https://viplimoegypt.com/${locale}/fleet/${id}` }
   };

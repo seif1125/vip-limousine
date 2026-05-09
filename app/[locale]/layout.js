@@ -5,53 +5,139 @@ import { Montserrat } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
-const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '700', '900'], display: 'swap' });
+const montserrat = Montserrat({ 
+  subsets: ['latin'], 
+  weight: ['400', '700', '900'], 
+  display: 'swap' 
+});
 
 const locales = ['en', 'ar'];
 
+// دالة توليد الـ Metadata الديناميكية
 export async function generateMetadata({ params }) {
   const { locale } = await params;
-  
+  const currentLocale = locales.includes(locale) ? locale : 'en';
+
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app-settings`, { next: { revalidate: 3600 } });
     const { data } = await res.json();
     const meta = data.appSettings.metadata;
 
+    // استخراج الحقول بناءً على اللغة الحالية
+    const title = meta[`defaultTitle_${currentLocale}`];
+    const template = meta[`titleTemplate_${currentLocale}`];
+    const description = meta[`description_${currentLocale}`];
+    const keywords = meta[`keywords_${currentLocale}`];
+
     return {
       metadataBase: new URL(meta.domainUrl),
-      title: { default: meta.defaultTitle, template: meta.titleTemplate },
-      description: meta.description,
+      title: {
+        default: title,
+        template: template,
+      },
+      description: description,
+      keywords: keywords,
+      openGraph: {
+        title: title,
+        description: description,
+        url: meta.domainUrl,
+        siteName: currentLocale === 'ar' ? 'في آي بي ليموزين مصر' : 'VIP Limousine Egypt',
+        images: [
+          {
+            url: meta.ogImage,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+        locale: currentLocale === 'ar' ? 'ar_EG' : 'en_US',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: title,
+        description: description,
+        images: [meta.ogImage],
+      },
+      alternates: {
+        canonical: `${meta.domainUrl}/${currentLocale}`,
+        languages: {
+          en: `${meta.domainUrl}/en`,
+          ar: `${meta.domainUrl}/ar`,
+        },
+      },
     };
   } catch (error) {
-    return { title: "VIP Limousine Egypt" }; 
+    console.log('error fetching metadata:', error);
+    return {
+      title: "VIP Limousine Egypt",
+      description: "Premium Car Limousine & Chauffeur Services",
+    };
   }
 }
 
 export default async function RootLayout({ children, params }) {
   const { locale } = await params;
-
-  // SAFEGUARD: If an invalid locale slips through middleware, default to 'en' 
-  // so the layout doesn't crash while trying to fetch missing translation files.
   const validLocale = locales.includes(locale) ? locale : 'en';
 
-  // Fetch translations based on the validated locale
+  // جلب الترجمات
   const messages = await getMessages();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app-settings`, { next: { revalidate: 3600 } });
-  const { data } = await res.json();
-  const { appSettings, contactSettings } = data;
+  // جلب بيانات الإعدادات
+  let appSettings = null;
+  let contactSettings = null;
 
-  const jsonLd = {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/app-settings`, { next: { revalidate: 3600 } });
+    if (res.ok) {
+      const response = await res.json();
+      appSettings = response.data.appSettings;
+      contactSettings = response.data.contactSettings;
+    }
+  } catch (error) {
+    console.error("Layout Fetch Error:", error);
+  }
+
+  // إعداد الـ JSON-LD Schema
+  const schema = appSettings?.schemaData;
+  const metadata = appSettings?.metadata;
+  
+  const jsonLd = schema ? {
     "@context": "https://schema.org",
-    "@type": appSettings.schemaData.businessType,
-    "name": appSettings.schemaData.businessName,
-  };
+    "@type": schema.businessType,
+    "name": schema[`businessName_${validLocale}`],
+    "description": metadata[`description_${validLocale}`],
+    "title": metadata[`defaultTitle_${validLocale}`],
+    "url": metadata.domainUrl,
+    "logo": `${metadata.domainUrl}/logo.png`,
+    "image": metadata.ogImage,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": validLocale === 'ar' ? "القاهرة" : "Cairo",
+      "addressCountry": "EG"
+    },
+    "areaServed": schema[`areaServed_${validLocale}`]?.map(area => ({
+      "@type": "City",
+      "name": area
+    })),
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": contactSettings?.phones?.hotline,
+      "contactType": "customer service",
+      "availableLanguage": ["Arabic", "English"]
+    }
+  } : null;
 
   return (
     <html lang={validLocale} dir={validLocale === 'ar' ? 'rtl' : 'ltr'}>
       <body className={`${montserrat.className} bg-slate-50 text-[#0F172A] antialiased`}>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        
+        {jsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        )}
+
         <NextIntlClientProvider messages={messages}>
           <Header settings={contactSettings} locale={validLocale} />
           <main>{children}</main>
