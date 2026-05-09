@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useLocale } from 'next-intl';
 import { 
   MapPin, Phone, MessageSquare, 
-  Send, Building2, User, Mail, Loader2, X 
+  Send, Building2, User, Mail, Loader2, X ,MessageCircle
 } from 'lucide-react';
 
 const InquiryForm = ({ isModal = false, formData, onChange, onSubmit, onEmailSubmit, isAr, isProcessing }) => (
@@ -122,7 +122,7 @@ export default function Footer({ settings }) {
         className={`md:hidden fixed bottom-6 right-6 z-40 bg-[#C5A25D] text-[#0F172A] p-4 rounded-full shadow-2xl shadow-black/50 hover:scale-105 transition-transform`}
         aria-label="Open Inquiry Form"
       >
-        <Building2 size={24} />
+        <MessageCircle size={24} />
       </button>
 
       {/* MOBILE MODAL OVERLAY */}

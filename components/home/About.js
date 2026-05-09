@@ -89,7 +89,7 @@ export default function About() {
             {isAr ? "فرق في آي بي" : "The VIP Difference"}
           </p>
           <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-[#0F172A] leading-none">
-            {isAr ? <>لماذا تختارنا <br /> لليموسين السيارات في مصر؟</> : <>Why Choose Us For <br /> Car Hire in Egypt?</>}
+            {isAr ? <>لماذا تختارنا <br /> لليموزين السيارات في مصر؟</> : <>Why Choose Us For <br /> Car Hire in Egypt?</>}
           </h2>
           <div className={`w-24 h-1 bg-[#C5A25D] rounded-full opacity-50 ${isAr ? 'mr-0' : 'ml-0'}`} />
         </div>
@@ -116,7 +116,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
             <h2 className="text-4xl font-black italic uppercase tracking-tighter text-[#0F172A]">
-              {isAr ? "خدمات ليموسين السيارات لدينا" : "Our Car Limousine Services"}
+              {isAr ? "خدمات ليموزين السيارات لدينا" : "Our Car Limousine Services"}
             </h2>
           </div>
 

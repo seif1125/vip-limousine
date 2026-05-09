@@ -82,10 +82,10 @@ const BookingForm = React.memo(({
         <div className="grid  gap-3">
           <div className="relative w-full">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A25D]" size={18} />
-            <input required type="email" placeholder={t('form.email')} className={iconInputStyle+'w-full'} value={formData.email}
+            <input  type="email" placeholder={t('form.email')} className={iconInputStyle+'w-full'} value={formData.email}
               onChange={(e) => setFormData(p => ({...p, email: e.target.value}))} />
           </div>
-          <input required placeholder={t('form.phone1')} className={inputStyle} value={formData.phone1}
+          <input  placeholder={t('form.phone1')} className={inputStyle} value={formData.phone1}
             onChange={(e) => setFormData(p => ({...p, phone1: e.target.value}))} />
          <input placeholder={t('form.phone1')} className={inputStyle} value={formData.phone2}
             onChange={(e) => setFormData(p => ({...p, phone2: e.target.value}))} />
@@ -366,7 +366,7 @@ export default function CarDetailInteractive({ car }) {
       isFullDay: formData.reservationType === "Full Day" 
     };
   }, [formData.fromDate, formData.toDate, formData.reservationType, car]);
-  const isFormValid = formData.customerName && formData.phone1 && formData.pickupLocation.address && formData.dropoffLocation.address && formData.fromDate;
+  const isFormValid = formData.customerName && (!formData.phone1==''||!formData.email=='')  && formData.pickupLocation.address && formData.dropoffLocation.address && formData.fromDate
 
   const handleLocationConfirm = (locationData) => {
     setFormData(prev => ({ 
@@ -401,6 +401,7 @@ export default function CarDetailInteractive({ car }) {
       });
   
       if (response.ok) {
+  
         await fetch('/api/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

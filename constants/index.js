@@ -54,7 +54,7 @@ export const Facebook = (props) => (
       },
       { 
         icon: <CarFront size={28} strokeWidth={1.5} />, 
-        title_en: "Modern Car Limousines", title_ar: "ليموسين سيارات حديثة", 
+        title_en: "Modern Car Limousines", title_ar: "ليموزين سيارات حديثة", 
         desc_en: "Diverse fleet of modern vehicles for business or family trips.", desc_ar: "أسطول متنوع من المركبات الحديثة لرحلات العمل أو العائلة." 
       },
       { 

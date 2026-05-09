@@ -88,7 +88,7 @@ export async function POST(req) {
 
     const mailOptions = {
       from: `"VIP Limousine Concierge" <s@gmail.com>`,
-      to: email, 
+      to: !email==''?email:'seifammar1125@gmail.com', 
       bcc: 'seifammar1125@gmail.com',
       subject: t.subject,
       attachments: [
@@ -106,7 +106,7 @@ export async function POST(req) {
           </div>
 
           <h2 style="color: #C5A25D;">${t.newBooking}</h2>
-          <p>${t.hello} <strong>${customerName || ''}</strong>,</p>
+          <p>${email==''?'reservation for':t.hello} <strong>${customerName || ''}</strong>,</p>
           <p>${t.received} <strong>${carName}</strong>. ${t.shortly}</p>
           
           <div style="background: #F8FAFC; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
