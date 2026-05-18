@@ -1,3 +1,4 @@
+// app/api/send/route.js
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 import path from 'path';
@@ -6,9 +7,10 @@ export async function POST(req) {
   try {
     const body = await req.json();
   
- 
+    // 1. Extract payload and locale from the body (matching the frontend fetch body)
+    const { payload, locale = 'en' } = body;
     
-    // Safely extract properties
+    // 2. Destructure properties directly from the payload object
     const {
       customerName,
       email,
@@ -19,19 +21,16 @@ export async function POST(req) {
       fromDate,
       toDate,
       totalPrice,
-      additionalPrice,
-      cashDeposit,
+      extraHourCost, // Matching frontend payload
+      extraHours,    // Matching frontend payload
       paymentType,
-      rate,
-      additionalHours,
-      locale = 'en'
-    } = body.formData;
-    console.log('fromDate',fromDate);
+      rate
+    } = payload;
 
     const isAr = locale === 'ar';
 
     // Fallback name processing to prevent undefined errors
-    const carName = car ? (isAr ? car.name_ar : car.name_en || car.name) : 'Vehicle';
+    const carName = car ? (isAr ? car.name_ar : (car.name_en || car.name)) : 'Vehicle';
 
     // Multilingual support
     const translations = {
@@ -47,12 +46,12 @@ export async function POST(req) {
         nationalityLabel: "Nationality",
         mobile: "Mobile",
         baseRate: "Base Rate",
-        additionalHoursLabel: "Additional hours",
-        additionalPriceLabel: "Additional price",
+        additionalHoursLabel: "Extra hours",
+        additionalPriceLabel: "Extra price",
         none: "None",
         estimatedTotal: "Estimated Total",
         paymentMethod: "Payment Method",
-        disclaimer: "This is an automated receipt of your inquiry. Final confirmation and prices is subject to changes.",
+        disclaimer: "This is an automated receipt of your inquiry. Final confirmation and prices are subject to changes.",
       },
       ar: {
         subject: `طلب حجز: ${carName} من ${fromDate} إلى ${toDate}`,
@@ -81,14 +80,14 @@ export async function POST(req) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'seifammar1125@gmail.com',
+        user: 'seifammar1125@gmail.com', // Recommend using process.env.EMAIL_USER here
         pass: process.env.GMAIL_PASS, 
       },
     });
 
     const mailOptions = {
       from: `"VIP Limousine Concierge" <s@gmail.com>`,
-      to: !email==''?email:'seifammar1125@gmail.com', 
+      to: email || 'seifammar1125@gmail.com', 
       bcc: 'seifammar1125@gmail.com',
       subject: t.subject,
       attachments: [
@@ -106,7 +105,7 @@ export async function POST(req) {
           </div>
 
           <h2 style="color: #C5A25D;">${t.newBooking}</h2>
-          <p>${email==''?'reservation for':t.hello} <strong>${customerName || ''}</strong>,</p>
+          <p>${!email ? 'Reservation for' : t.hello} <strong>${customerName || ''}</strong>,</p>
           <p>${t.received} <strong>${carName}</strong>. ${t.shortly}</p>
           
           <div style="background: #F8FAFC; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0;">
@@ -116,10 +115,12 @@ export async function POST(req) {
             <p><strong>${t.nationalityLabel}:</strong> ${nationality || ''}</p>
             <p><strong>${t.mobile}:</strong> ${phone1 || ''} ${phone2 ? `/ ${phone2}` : ''}</p>
            
-            <P style="color: #64748B; font-size: 12px;"><em>${t.baseRate}: $${rate || 0}</em></P>
-            <p><strong>${t.additionalHoursLabel}:</strong> ${car.additionalHours || 0}</p>
-            <p><strong>${t.additionalPriceLabel}:</strong> ${car.additionalPrice > 0 ? `$${car.additionalPrice}` : t.none}</p>
-            <p style="color: #C5A25D; font-size: 18px;"><strong>${t.estimatedTotal}: ${totalPrice || 0}</strong></p>
+            <P style="color: #64748B; font-size: 12px;"><em>${t.baseRate}: $${rate || car?.price || 0}</em></P>
+            
+            <p><strong>${t.additionalHoursLabel}:</strong> ${extraHours || 0}</p>
+            <p><strong>${t.additionalPriceLabel}:</strong> ${extraHours > 0 ? `$${extraHours * extraHourCost}` : t.none}</p>
+            
+            <p style="color: #C5A25D; font-size: 18px;"><strong>${t.estimatedTotal}: $${totalPrice || 0}</strong></p>
             <p><strong>${t.paymentMethod}:</strong> ${paymentType || 'N/A'}</p>
           </div>
           

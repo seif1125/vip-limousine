@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Mail, Menu, X, Globe } from 'lucide-react';
-import { Facebook, Instagram, TikTok, Youtube } from '@/constants';
+import { Facebook, Instagram, TikTok, Youtube ,Snapchat} from '@/constants';
 // Import from your i18n routing
 import { Link, usePathname, useRouter } from '@/i18n/routing'; 
 import { useLocale } from 'next-intl';
+
 
 export default function Header({ settings }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,9 @@ export default function Header({ settings }) {
     { icon: <Youtube />, href: settings?.socials?.youtube },
     { icon: <TikTok size={20} />, href: settings?.socials?.tiktok },
     { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}` },
+    {icon: <Snapchat size={20} />, href: settings?.socials?.snapchat} ,
+    {icon: <Globe size={20} />, href: settings?.emails?.threads} ,
+    // Placeholder for language switcher
   ];
 
   // Helper to switch language

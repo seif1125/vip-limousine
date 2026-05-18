@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronRight, ChevronLeft, ArrowRight, ArrowLeft } from 'lucide-react';
-import { Link } from '@/i18n/routing'; // Use localized Link
+import { Link } from '@/i18n/routing'; 
 import { useLocale } from 'next-intl';
 import Image from 'next/image';
 
@@ -11,13 +11,12 @@ export default function Hero({ banners }) {
   const locale = useLocale();
   const isAr = locale === 'ar';
 
-  // Embla supports RTL natively via the 'direction' option
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
       direction: isAr ? 'rtl' : 'ltr' 
     }, 
-    [Autoplay()]
+    [Autoplay({ delay: 6000, stopOnInteraction: false })]
   );
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
@@ -32,31 +31,45 @@ export default function Hero({ banners }) {
       <div className="overflow-hidden h-full" ref={emblaRef}>
         <div className="flex h-full">
           {banners.map((slide, index) => {
-            // Localize API data
             const title = isAr ? (slide.title_ar || slide.title_en) : slide.title_en;
             const subtitle = isAr ? (slide.subtitle_ar || slide.subtitle_en) : slide.subtitle_en;
             const buttonText = isAr ? (slide.buttonText_ar || slide.buttonText_en) : slide.buttonText_en;
+            
+            // Check if backdrop is a video stream link
+            const isVideo = slide.bannerType === 'video' || slide.imageUrl?.toLowerCase().includes('.mp4');
 
             return (
               <div className="relative flex-[0_0_100%] min-w-0 h-full" key={slide._id}>
-                {/* Image with Navy Overlay */}
+                
+                {/* Media Backdrop Container */}
                 <div className="absolute inset-0 z-0">
-                  <Image
-                    fill
-                    src={slide.imageUrl} 
-                    alt={title} 
-                    priority={index === 0}
-                    className="object-cover" 
-                    quality={85}
-                  />
-                  {/* Dynamic Gradient: Fades from the text side */}
-                  <div className={`absolute inset-0 bg-gradient-to-75 from-[#0F172A] via-[#0F172A]/60 to-transparent ${isAr ? 'bg-gradient-to-l' : 'bg-gradient-to-r'}`} />
+                  {isVideo ? (
+                    <video
+                      src={slide.imageUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      fill
+                      src={slide.imageUrl} 
+                      alt={title} 
+                      priority={index === 0}
+                      className="object-cover" 
+                      quality={85}
+                    />
+                  )}
+                  
+                  {/* Dynamic Gradient Mask for Text Readability */}
+                  <div className={`absolute inset-0 bg-gradient-to-75 from-[#0F172A] via-[#0F172A]/70 to-transparent ${isAr ? 'bg-gradient-to-l' : 'bg-gradient-to-r'}`} />
                 </div>
                 
-                {/* Content */}
+                {/* Content Overlay */}
                 <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex items-center">
                   <div className="max-w-2xl space-y-6">
-                    
                     <h1 className="text-5xl md:text-7xl font-black text-[#C5A25D] italic uppercase tracking-tighter leading-none">
                       {title}
                     </h1>
@@ -74,13 +87,14 @@ export default function Hero({ banners }) {
                     </div>
                   </div>
                 </div>
+
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Navigation Arrows - Swapped positions for RTL visually */}
+      {/* Navigation Controls */}
       <button 
         onClick={scrollPrev} 
         className={`absolute ${isAr ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 z-20 p-3 rounded-full border border-white/20 text-white hover:bg-[#C5A25D] transition-all`}
