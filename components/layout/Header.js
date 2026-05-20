@@ -135,7 +135,7 @@ export default function Header({ settings }) {
           {/* MOBILE SOCIALS */}
           <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-                {isAr ? "تواصل معنا" : "Connect with us"}
+                {isAr ? "تواصل معنا" : "Contact us"}
             </p>
             <div className="flex flex-wrap gap-6 text-[#0F172A]">
                 {socialLinks.map((social, idx) => (
