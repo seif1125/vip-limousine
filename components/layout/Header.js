@@ -1,8 +1,8 @@
 "use client";
 import { useState } from 'react';
 import Image from 'next/image';
-import { Mail, Menu, X, Globe } from 'lucide-react';
-import { Facebook, Instagram, TikTok, Youtube ,Snapchat} from '@/constants';
+import { Menu, X, Globe,Mail} from 'lucide-react';
+import {Whatsapp} from '@/constants';
 // Import from your i18n routing
 import { Link, usePathname, useRouter } from '@/i18n/routing'; 
 import { useLocale } from 'next-intl';
@@ -24,14 +24,12 @@ export default function Header({ settings }) {
     { name: isAr ? "الخصوصية" : "Privacy", href: "/privacy" },
   ];
 
+
   const socialLinks = [
-    { icon: <Facebook />, href: settings?.socials?.facebook },
-    { icon: <Instagram />, href: settings?.socials?.instagram },
-    { icon: <Youtube />, href: settings?.socials?.youtube },
-    { icon: <TikTok size={20} />, href: settings?.socials?.tiktok },
+   
     { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}` },
-    {icon: <Snapchat size={20} />, href: settings?.socials?.snapchat} ,
-    {icon: <Globe size={20} />, href: settings?.emails?.threads} ,
+
+    {icon: <Whatsapp size={20} />, href: `https://wa.me/${settings.phones.whatsapp1.replace(/\D/g, '')}`} ,
     // Placeholder for language switcher
   ];
 
@@ -135,7 +133,7 @@ export default function Header({ settings }) {
           {/* MOBILE SOCIALS */}
           <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-                {isAr ? "تواصل معنا" : "Contact us"}
+                {isAr ? "تواصل معنا" : "Contact us and support"}
             </p>
             <div className="flex flex-wrap gap-6 text-[#0F172A]">
                 {socialLinks.map((social, idx) => (
