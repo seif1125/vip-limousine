@@ -37,6 +37,11 @@ export async function generateMetadata({ params }) {
       },
       description: description,
       keywords: keywords,
+      icons: {
+        icon: '/icon.png',         // Points to your public/icon.png or app/icon.png
+        shortcut: '/icon.png',
+        apple: '/icon.png',
+      },
       openGraph: {
         title: title,
         description: description,
