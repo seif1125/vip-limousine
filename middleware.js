@@ -9,7 +9,7 @@ export default createMiddleware({
   defaultLocale: 'en', // <--- Change this from 'ar' to 'en'
   
   // Optional: If you don't want '/en' to show in the URL bar for the default language
-  localePrefix: 'as-needed' 
+  localePrefix: 'always', // <--- Change this from 'as-needed' to 'always'
 });
 
 export const config = {
