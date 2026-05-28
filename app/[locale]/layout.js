@@ -10,6 +10,11 @@ const montserrat = Montserrat({
   weight: ['400', '700', '900'], 
   display: 'swap' 
 });
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5, // Allows user pinch-to-zoom for access eligibility
+};
 
 const locales = ['en', 'ar'];
 
@@ -28,7 +33,7 @@ export async function generateMetadata({ params }) {
     const template = meta[`titleTemplate_${currentLocale}`];
     const description = meta[`description_${currentLocale}`];
     const keywords = meta[`keywords_${currentLocale}`];
-
+    
     return {
       metadataBase: new URL(meta.domainUrl),
       title: {
@@ -69,6 +74,7 @@ export async function generateMetadata({ params }) {
         languages: {
           en: `${meta.domainUrl}/en`,
           ar: `${meta.domainUrl}/ar`,
+          'x-default': `${meta.domainUrl}/en`,
         },
       },
     };
