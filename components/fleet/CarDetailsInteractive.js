@@ -234,16 +234,16 @@ const BookingForm = React.memo(({
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
             <div className="flex justify-between items-center text-[9px] uppercase tracking-wider">
               <span className="text-slate-400">{t('form.baseRate')}</span>
-              <span className="text-white font-bold">${priceBreakdown.base.toLocaleString()}</span>
+              <span className="text-white font-bold">EGP{priceBreakdown.base.toLocaleString()}</span>
             </div>
 
             {priceBreakdown.extraHours > 0 && (
               <div className="flex justify-between items-center text-[9px] uppercase tracking-wider">
                 <span className="text-slate-400">
-                  {t('form.extraHours')} ({priceBreakdown.extraHours}h × ${priceBreakdown.extraHourRate})
+                  {t('form.extraHours')} ({priceBreakdown.extraHours}h × EGP{priceBreakdown.extraHourRate})
                 </span>
                 <span className="text-white font-bold">
-                  +${(priceBreakdown.extraHours * priceBreakdown.extraHourRate).toLocaleString()}
+                  +EGP{(priceBreakdown.extraHours * priceBreakdown.extraHourRate).toLocaleString()}
                 </span>
               </div>
             )}
@@ -252,7 +252,7 @@ const BookingForm = React.memo(({
 
             <div className="flex justify-between items-center">
               <span className="text-[10px] font-black uppercase text-[#C5A25D]">{t('form.total')}</span>
-              <h5 className="text-2xl font-black text-white">${priceBreakdown.total.toLocaleString()}</h5>
+              <h5 className="text-2xl font-black text-white">EGP{priceBreakdown.total.toLocaleString()}</h5>
             </div>
           </div>
 
@@ -481,7 +481,7 @@ export default function CarDetailInteractive({ car }) {
                 </div>
                 <div className="text-right">
                     <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{t('form.startingFrom')}</p>
-                    <h3 className="text-3xl font-black text-[#C5A25D]">${car.price}</h3>
+                    <h3 className="text-3xl font-black text-[#C5A25D]">EGP{car.price}</h3>
                 </div>
             </div>
 

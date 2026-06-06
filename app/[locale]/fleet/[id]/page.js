@@ -42,7 +42,7 @@ export default async function CarDetailPage({ params }) {
     "offers": {
       "@type": "Offer",
       "price": car.price,
-      "priceCurrency": "USD",
+      "priceCurrency": "EGP",
       "availability": "https://schema.org/InStock",
       "url": `https://viplimoegypt.com/${locale}/fleet/${id}`
     }

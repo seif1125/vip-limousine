@@ -74,9 +74,11 @@ export default function FleetCard({ car }) {
         {/* PRICE SECTION */}
         {car.price && (
           <div className="shrink-0 flex items-center mt-auto mb-4" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-            <meta itemProp="priceCurrency" content="USD" />
+            <meta itemProp="priceCurrency" content="EGP" />
             <div className="text-xl font-black italic text-[#C5A25D] leading-none">
-              <DollarSign size={14} className="inline-block" />
+              <span className="text-sm text-slate-400 mr-1" >
+               EGP
+              </span>
               <span itemProp="price">{car.price}</span>
             </div>
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1 block">

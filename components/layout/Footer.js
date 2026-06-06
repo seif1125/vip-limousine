@@ -98,7 +98,7 @@ export default function Footer({ settings }) {
     { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}` },
     {icon: <Snapchat size={20} />, href: settings?.socials?.snapchat} ,
     {icon: <Globe size={20} />, href: settings?.emails?.threads} ,
-    {icon: <Whatsapp size={20} />, href: `https://wa.me/${settings.phones.whatsapp1.replace(/\D/g, '')}`} ,
+    {icon: <Whatsapp fill="#8091a7" size={20} />, href: `https://wa.me/${settings.phones.whatsapp1.replace(/\D/g, '')}`} ,
     // Placeholder for language switcher
   ];
 

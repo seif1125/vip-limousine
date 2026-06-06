@@ -77,14 +77,24 @@ export async function POST(req) {
     const t = translations[isAr ? 'ar' : 'en'];
     const dir = isAr ? 'rtl' : 'ltr';
 
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   auth: {
+    //     user: 'seifammar1125@gmail.com', // Recommend using process.env.EMAIL_USER here
+    //     pass: process.env.GMAIL_PASS, 
+    //   },
+    // });
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'seifammar1125@gmail.com', // Recommend using process.env.EMAIL_USER here
-        pass: process.env.GMAIL_PASS, 
+        type: 'OAuth2',
+        user: 'seifammar1125@gmail.com',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+       
       },
     });
-
     const mailOptions = {
       from: `"VIP Limousine Concierge" <s@gmail.com>`,
       to: email || 'seifammar1125@gmail.com', 
@@ -115,12 +125,12 @@ export async function POST(req) {
             <p><strong>${t.nationalityLabel}:</strong> ${nationality || ''}</p>
             <p><strong>${t.mobile}:</strong> ${phone1 || ''} ${phone2 ? `/ ${phone2}` : ''}</p>
            
-            <P style="color: #64748B; font-size: 12px;"><em>${t.baseRate}: $${rate || car?.price || 0}</em></P>
+            <P style="color: #64748B; font-size: 12px;"><em>${t.baseRate}: EGP${rate || car?.price || 0}</em></P>
             
             <p><strong>${t.additionalHoursLabel}:</strong> ${extraHours || 0}</p>
-            <p><strong>${t.additionalPriceLabel}:</strong> ${extraHours > 0 ? `$${extraHours * extraHourCost}` : t.none}</p>
+            <p><strong>${t.additionalPriceLabel}:</strong> ${extraHours > 0 ? `EGP${extraHours * extraHourCost}` : t.none}</p>
             
-            <p style="color: #C5A25D; font-size: 18px;"><strong>${t.estimatedTotal}: $${totalPrice || 0}</strong></p>
+            <p style="color: #C5A25D; font-size: 18px;"><strong>${t.estimatedTotal}: EGP${totalPrice || 0}</strong></p>
             <p><strong>${t.paymentMethod}:</strong> ${paymentType || 'N/A'}</p>
           </div>
           

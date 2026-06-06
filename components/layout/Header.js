@@ -29,7 +29,7 @@ export default function Header({ settings }) {
    
     { icon: <Mail size={20} />, href: `mailto:${settings?.emails?.supportMail}` },
 
-    {icon: <Whatsapp size={20} />, href: `https://wa.me/${settings.phones.whatsapp1.replace(/\D/g, '')}`} ,
+    {icon: <Whatsapp fill="#000" className="text-black" size={20} />, href: `https://wa.me/${settings.phones.whatsapp1.replace(/\D/g, '')}`} ,
     // Placeholder for language switcher
   ];
 
